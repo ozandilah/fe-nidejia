@@ -9,7 +9,31 @@ export const transactionApi = apiSlice.injectEndpoints({
         body: payload,
       }),
     }),
+    transaction: build.mutation({
+      query: (payload) => ({
+        url: "/transaction",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    getDetailTransaction: build.query({
+      query: (id) => ({
+        url: `/transaction/${id}`,
+        method: "GET",
+      }),
+    }),
+    getTransactions: build.query({
+      query: () => ({
+        url: "/transaction",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCheckAvailabiltyMutation } = transactionApi;
+export const {
+  useCheckAvailabiltyMutation,
+  useTransactionMutation,
+  useGetDetailTransactionQuery,
+  useGetTransactionsQuery,
+} = transactionApi;

@@ -8,18 +8,21 @@ import { useCheckAvailabiltyMutation } from "@/services/transaction.service";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 interface BookingSectionProps {
   id: number;
+  slug: string;
   price: number;
 }
 
-function BookingSection({ id, price }: BookingSectionProps) {
+function BookingSection({ id, slug, price }: BookingSectionProps) {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
 
   const { toast } = useToast();
+  const router = useRouter();
   const [checkAvailabilty, { isLoading }] = useCheckAvailabiltyMutation();
   const booking = useMemo(() => {
     let totalDays = 0,
@@ -48,9 +51,11 @@ function BookingSection({ id, price }: BookingSectionProps) {
       };
       const res = await checkAvailabilty(data).unwrap();
 
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
+      if (res.success) {
+        router.push(
+          `/listing/${slug}/checkout?start_date=${data.start_date}&end_date=${data.end_date}`
+        );
+      }
     } catch (error: any) {
       if (error.status === 401) {
         toast({
